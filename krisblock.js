@@ -49,7 +49,7 @@ EntryStatic.getAllBlocks = function() {
     ]
 }
 Entry.block = {
-    gpt_api_block: {
+    kris_block: {
         color: "#4A90E2",
         skeleton: "basic",
         template: "GPT에게 질문 보내기 %1",
@@ -62,9 +62,9 @@ Entry.block = {
         ],
         events: {},
         def: {
-            type: "gpt_api_block"
+            type: "kris_block"
         },
-        class: "ai",
+        class: "kris",
         isNotFor: [],
 
         func: function (sprite, script) {
