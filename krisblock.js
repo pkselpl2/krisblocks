@@ -1,173 +1,140 @@
 (function () {
-    if (!window.Entry || !Entry.block) {
-        console.error('❌ Entry 로드 안됨');
+    if (!window.Entry) {
+        console.error("❌ Entry가 로드되지 않았습니다");
         return;
     }
 
-    /*************************************************
-     * 1️⃣ iframe 공용 생성 함수
-     *************************************************/
-    function getIframe() {
-        let iframe = document.getElementById('kris_iframe');
-        if (!iframe) {
-            iframe = document.createElement('iframe');
-            iframe.id = 'kris_iframe';
-            iframe.style.position = 'fixed';
-            iframe.style.left = '50px';
-            iframe.style.top = '50px';
-            iframe.style.width = '800px';
-            iframe.style.height = '500px';
-            iframe.style.border = '2px solid #7CFC00';
-            iframe.style.background = 'white';
-            iframe.style.zIndex = '9999';
-            document.body.appendChild(iframe);
-        }
-        return iframe;
-    }
+    /* ===============================
+       Kris Custom Blocks 1.0
+       Category: 크리스
+       Icon: hardware (내장)
+       Color: Light Green
+    ================================ */
 
-    /*************************************************
-     * 2️⃣ 블록 정의 (Entry.block)
-     *************************************************/
-
-    // ▶ iframe 열기
+    /* 1️⃣ iframe로 웹사이트 열기 */
     Entry.block.kris_iframe_open = {
-        color: '#7CFC00',
-        fontColor: '#000000',
-        skeleton: 'basic_statement',
-        template: '웹사이트 %1 iframe 열기',
-        category: 'kris',
-
+        color: "#7CFC00",
+        outerLine: "#5cbf00",
+        fontColor: "#000000",
+        skeleton: "basic_statement",
         params: [
-            { type: 'Block', accept: 'string' }
+            {
+                type: "Block",
+                accept: "string",
+                defaultType: "string",
+                value: "https://example.co.kr"
+            }
         ],
-
-        def: {
-            params: [
-                { type: 'text', params: ['https://example.com'] }
-            ],
-            type: 'kris_iframe_open'
+        paramsKeyMap: {
+            URL: 0
         },
+        class: "kris",
+        isNotFor: ["sprite"],
 
         func: function (sprite, script) {
-            let url = script.getStringValue('STRING');
-            if (!url.startsWith('http')) {
-                url = 'https://' + url;
+            let url = script.getStringValue("URL");
+
+            if (!url.startsWith("http")) {
+                url = "https://" + url;
             }
-            const iframe = getIframe();
+
+            let iframe = document.getElementById("kris_iframe");
+            if (!iframe) {
+                iframe = document.createElement("iframe");
+                iframe.id = "kris_iframe";
+                iframe.style.position = "fixed";
+                iframe.style.top = "80px";
+                iframe.style.left = "80px";
+                iframe.style.width = "900px";
+                iframe.style.height = "500px";
+                iframe.style.border = "2px solid #7CFC00";
+                iframe.style.background = "#fff";
+                iframe.style.zIndex = "99999";
+                document.body.appendChild(iframe);
+            }
+
             iframe.src = url;
             return script.callReturn();
         }
     };
 
-    // ▶ iframe 닫기
+    /* 2️⃣ 새 창으로 웹사이트 열기 */
+    Entry.block.kris_open_window = {
+        color: "#7CFC00",
+        outerLine: "#5cbf00",
+        fontColor: "#000000",
+        skeleton: "basic_statement",
+        params: [
+            {
+                type: "Block",
+                accept: "string",
+                defaultType: "string",
+                value: "https://example.co.kr"
+            }
+        ],
+        paramsKeyMap: {
+            URL: 0
+        },
+        class: "kris",
+        isNotFor: ["sprite"],
+
+        func: function (sprite, script) {
+            let url = script.getStringValue("URL");
+            if (!url.startsWith("http")) {
+                url = "https://" + url;
+            }
+            window.open(url, "_blank");
+            return script.callReturn();
+        }
+    };
+
+    /* 3️⃣ iframe 닫기 */
     Entry.block.kris_iframe_close = {
-        color: '#7CFC00',
-        fontColor: '#000000',
-        skeleton: 'basic_statement',
-        template: 'iframe 닫기',
-        category: 'kris',
-
+        color: "#7CFC00",
+        outerLine: "#5cbf00",
+        fontColor: "#000000",
+        skeleton: "basic",
         params: [],
-        def: {
-            params: [],
-            type: 'kris_iframe_close'
-        },
+        class: "kris",
+        isNotFor: ["sprite"],
 
-        func: function (sprite, script) {
-            const iframe = document.getElementById('kris_iframe');
+        func: function () {
+            const iframe = document.getElementById("kris_iframe");
             if (iframe) iframe.remove();
-            return script.callReturn();
+            return Entry.Engine ? Entry.Engine.execute() : null;
         }
     };
 
-    // ▶ iframe 위치 이동
-    Entry.block.kris_iframe_move = {
-        color: '#7CFC00',
-        fontColor: '#000000',
-        skeleton: 'basic_statement',
-        template: 'iframe 위치 x %1 y %2',
-        category: 'kris',
+    /* 4️⃣ 버전 확인 블록 */
+    Entry.block.kris_block_version = {
+        color: "#7CFC00",
+        outerLine: "#5cbf00",
+        fontColor: "#000000",
+        skeleton: "basic_string_field",
+        params: [],
+        class: "kris",
+        isNotFor: ["sprite"],
 
-        params: [
-            { type: 'Block', accept: 'number' },
-            { type: 'Block', accept: 'number' }
-        ],
-
-        def: {
-            params: [
-                { type: 'number', params: [50] },
-                { type: 'number', params: [50] }
-            ],
-            type: 'kris_iframe_move'
-        },
-
-        func: function (sprite, script) {
-            const x = script.getNumberValue('NUMBER');
-            const y = script.getNumberValue('NUMBER2');
-            const iframe = document.getElementById('kris_iframe');
-            if (iframe) {
-                iframe.style.left = x + 'px';
-                iframe.style.top = y + 'px';
-            }
-            return script.callReturn();
+        func: function () {
+            return "크리스블록 1.0";
         }
     };
 
-    // ▶ iframe 크기 조절
-    Entry.block.kris_iframe_resize = {
-        color: '#7CFC00',
-        fontColor: '#000000',
-        skeleton: 'basic_statement',
-        template: 'iframe 크기 가로 %1 세로 %2',
-        category: 'kris',
+    /* 5️⃣ ⭐ 카테고리 등록 (정답) */
+    Entry.blockInfo.kris = {
+        name: "크리스",
+        color: "#7CFC00",
 
-        params: [
-            { type: 'Block', accept: 'number' },
-            { type: 'Block', accept: 'number' }
-        ],
+        // ✅ 내장 아이콘 강제 사용
+        icon: "hardware",
 
-        def: {
-            params: [
-                { type: 'number', params: [800] },
-                { type: 'number', params: [500] }
-            ],
-            type: 'kris_iframe_resize'
-        },
-
-        func: function (sprite, script) {
-            const w = script.getNumberValue('NUMBER');
-            const h = script.getNumberValue('NUMBER2');
-            const iframe = document.getElementById('kris_iframe');
-            if (iframe) {
-                iframe.style.width = w + 'px';
-                iframe.style.height = h + 'px';
-            }
-            return script.callReturn();
-        }
-    };
-
-    /*************************************************
-     * 3️⃣ 카테고리 등록 (UI 핵심)
-     *************************************************/
-    Entry.blockCategory = Entry.blockCategory || {};
-
-    Entry.blockCategory.kris = {
-        name: '크리스',
-        color: '#7CFC00',
         blocks: [
-            'kris_iframe_open',
-            'kris_iframe_close',
-            'kris_iframe_move',
-            'kris_iframe_resize'
+            "kris_iframe_open",
+            "kris_open_window",
+            "kris_iframe_close",
+            "kris_block_version"
         ]
     };
 
-    /*************************************************
-     * 4️⃣ 블록 메뉴 다시 그리기
-     *************************************************/
-    if (Entry.workspace && Entry.workspace._renderBlocks) {
-        Entry.workspace._renderBlocks();
-    }
-
-    console.log('✅ 크리스블록 1.0 풀버전 로드 완료');
+    console.log("✅ 크리스 블록 1.0 로드 완료 (카테고리 정상)");
 })();
