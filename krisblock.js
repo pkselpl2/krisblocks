@@ -1,81 +1,70 @@
-(function() {
-    if (!window.Entry) {
-        console.error("❌ Entry가 로드되지 않았습니다");
-        return;
-    }
+// 1️⃣ 기존 staticBlocks 유지
+if (!Array.isArray(Entry.staticBlocks)) Entry.staticBlocks = Entry.staticBlocks || [];
 
-    /* ===============================
-       Kris Full Special Blocks
-       Category: 크리스
-       Icon: hardware (내장)
-       Color: Light Green
-    ================================ */
+// 2️⃣ 크리스 블록 정의
+const krisBlocks = Object.keys(Entry.block).filter(k => k.startsWith("kris"));
 
-    const krisBlocks = [
-        "kris_iframe_open",
-        "kris_open_window",
-        "kris_iframe_close",
-        "kris_block_version",
+// 3️⃣ API 블록 정의 (기존 코드 참고)
+const apiBlocks = [
+    'fetch','array_number','array_length','json_key','json_length','post_commu','post_qna','get_browser',
+    'toast','console','console_clear','entry_console','entry_console_clear','change_var','entry_console_writing',
+    'finish','likeList','boost_mode','mouse','didScroll','scrollHandle','stop_button(click)_start','open_win',
+    'pc','PromptConfirm','user.username','change(X)','mypage','asdf'
+];
 
-        "fetch",
-        "array_number",
-        "array_length",
-        "json_key",
-        "json_length",
-        "post_commu",
-        "post_qna",
-        "get_browser",
-        "toast",
-        "console",
-        "console_clear",
-        "entry_console",
-        "entry_console_clear",
-        "change_var",
-        "entry_console_writing",
-        "finish",
-        "likeList",
-        "boost_mode",
-        "mouse",
-        "didScroll",
-        "scrollHandle",
-        "stop_button(click)_start",
-        "open_win",
-        "pc",
-        "PromptConfirm",
-        "user.username",
-        "change(X)",
-        "mypage",
-        "asdf"
-    ];
+// 4️⃣ staticBlocks에 새 카테고리 추가
+Entry.staticBlocks.push(
+    { category: 'API', blocks: apiBlocks },
+    { category: 'kris', blocks: krisBlocks }
+);
 
-    // 카테고리 등록
-    Entry.blockInfo.kris = {
-        name: "크리스",
-        color: "#7CFC00",
-        icon: "hardware",
-        blocks: krisBlocks
-    };
+// 5️⃣ 카테고리 업데이트 함수 (안전하게)
+const updateCategory = () => {
+    if (!Entry.playground || !Entry.playground.mainWorkspace || !Entry.playground.blockMenu) return;
 
-    // UI에 카테고리 추가
-    const updateCategory = (category, options) => {
-        Entry.playground.mainWorkspace.blockMenu._generateCategoryView([
-            { category: category, visible: true }
-        ]);
-        Entry.playground.blockMenu._categoryData = Entry.staticBlocks.concat({ category: category, blocks: krisBlocks });
-        Entry.playground.blockMenu._generateCategoryCode(category);
+    // 기존 카테고리 + 새 카테고리 표시
+    const categories = Entry.staticBlocks.map(c => ({ category: c.category, visible: true }));
+    Entry.playground.mainWorkspace.blockMenu._generateCategoryView(categories);
 
-        if (options) {
-            if (options.background) {
-                $(`#entryCategory${category}`).css('background-image', 'url(' + options.background + ')');
-                $(`#entryCategory${category}`).css('background-repeat', 'no-repeat');
-                if (options.backgroundSize) $(`#entryCategory${category}`).css('background-size', options.backgroundSize + 'px');
-            }
-            if (options.name) $(`#entryCategory${category}`)[0].innerText = options.name;
-        }
-    };
+    // 카테고리 데이터 업데이트
+    Entry.playground.blockMenu._categoryData = Entry.staticBlocks;
 
-    updateCategory('kris', { name: '크리스', background: '/lib/entry-js/images/hardware.svg', backgroundSize: 32 });
+    // 각 카테고리 코드 생성
+    categories.forEach(c => Entry.playground.blockMenu._generateCategoryCode(c.category));
+};
 
-    console.log("✅ 크리스 풀버전 블록 로드 완료");
-    alert("크리스 블록 1.0 로드 완료!");
-})();
+// 6️⃣ 카테고리 스타일 적용
+$('head').append(`
+<style>
+#entryCategoryAPI {
+    background-image: url(/lib/entry-js/images/hardware.svg);
+    background-repeat: no-repeat;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    margin-bottom: 1px;
+}
+.entrySelectedCategory#entryCategoryAPI {
+    background-image: url(/lib/entry-js/images/hardware_on.svg);
+    background-color: #000;
+    border-color: #000;
+    color: #fff;
+}
+#entryCategorykris {
+    background-image: url(/lib/entry-js/images/green.png); /* 원하는 아이콘 */
+    background-repeat: no-repeat;
+    border-radius: 6px;
+}
+.entrySelectedCategory#entryCategorykris {
+    background-color: #0f0;
+    color: #000;
+}
+</style>
+`);
+
+// 7️⃣ 카테고리 업데이트 실행
+setTimeout(updateCategory, 500);
+
+// 8️⃣ 알림/콘솔/문서 제목 통일
+alert("크리스블록 로드 완료!");
+console.log("크리스블록 1.0 beta 작동 시작!");
+document.title = "Special_Block_entry";
