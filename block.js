@@ -360,6 +360,11 @@ const LibraryCreator = {
       }
     }
   }
+const KRIS_GREEN = {
+  default: '#7CDB9C',   // 연두
+  darken:  '#5FBF84'    // 진한 연두
+};
+
 const blocks = [
 
 /* iframe 보이기 */
