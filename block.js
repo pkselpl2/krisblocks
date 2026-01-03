@@ -150,7 +150,7 @@ const krisBlocks = [
     paramsKeyMap: {},
     class: 'text',
     func: () => {
-      if (Entry.engine) Entry.engine.pause();
+      if (Entry.engine) Entry.engine.toggleStop();
       return;
     },
   },
@@ -167,7 +167,7 @@ const krisBlocks = [
     paramsKeyMap: {},
     class: 'text',
     func: () => {
-      if (Entry.engine) Entry.engine.play();
+      if (Entry.engine) Entry.engine.toggleRun();
       return;
     },
   },
