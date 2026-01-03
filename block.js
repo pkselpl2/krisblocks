@@ -1,5 +1,5 @@
 /***********************
- * 크리스블록 0.1
+ * 크리스블록 0.2
  * 진짜 iframe 풀버전
  ***********************/
 
@@ -150,7 +150,7 @@ const krisBlocks = [
     paramsKeyMap: {},
     class: 'text',
     func: () => {
-      if (Entry.engine) Entry.engine.pause();
+      if (Entry.engine) Entry.engine.toggleStop();
       return;
     },
   },
@@ -167,7 +167,7 @@ const krisBlocks = [
     paramsKeyMap: {},
     class: 'text',
     func: () => {
-      if (Entry.engine) Entry.engine.play();
+      if (Entry.engine) Entry.engine.toggleRun();
       return;
     },
   },
@@ -192,15 +192,18 @@ const krisBlocks = [
   /* 크레딧 */
   {
     name: 'kris_credit',
-    template: '이 블록은 GPT와 크리스가 만들었습니다',
-    skeleton: 'basic',
-    color: KRIS_COLOR.default,
-    outerLine: KRIS_COLOR.darken,
-    params: [],
+    template: '%1',
+    color: EntryStatic.colorSet.common.TRANSPARENT,
+    skeleton: 'basic_text',
+    params: [{
+      type: 'Text',
+      text: '이 블록은 GPT와 크리스가 만들었습니다',
+      color: EntryStatic.colorSet.common.TEXT,
+      align: 'center',
+    }],
     def: [],
     paramsKeyMap: {},
     class: 'text',
-    func: () => {},
   },
 ];
 
@@ -208,43 +211,61 @@ const krisBlocks = [
 window.LibraryCreator = {
   start(blocks, category, name, icon) {
     if (!window.Entry || !Entry.block) {
-      console.error('[KrisBlock] Entry not ready');
+      new MutationObserver((_, observer) => {
+        if (window.Entry && Entry.block) {
+          this.start(blocks, category, name, icon);
+          observer.disconnect();
+        }
+      }).observe(document, { subtree: true, childList: true });
+
       return;
     }
 
-    Entry.staticBlocks = Entry.staticBlocks || [];
-    const blockNames = [];
+    if (EntryStatic.getAllBlocks().some(block => category == block.category)) return;
+    Lang.Blocks[category.toUpperCase()] = name;
 
-    blocks.forEach(block => {
-      Entry.block[block.name] = block;
-      blockNames.push(block.name);
-    });
+    EntryStatic.getAllBlocks = (getAllBlocks => () => [
+      ...getAllBlocks(),
+      {
+        category,
+        blocks: blocks.map(v => v.name),
+      },
+    ])(EntryStatic.getAllBlocks);
 
-    Entry.staticBlocks.push({
+    Entry.playground?.blockMenu?._categoryData.push({
       category,
-      blocks: blockNames,
+      blocks: [],
     });
 
-    setTimeout(() => {
-      if (!Entry.playground) return;
-      Entry.playground.blockMenu._generateCategoryView(
-        Entry.staticBlocks.map(v => ({ category: v.category, visible: true }))
-      );
-      Entry.playground.blockMenu._generateCategoryCode(category);
+    Entry.playground?.blockMenu?._generateCategoryView(Entry.playground.blockMenu._categoryData);
+    Entry.playground?.blockMenu?._generateCategoryCode(category);
 
-      $('head').append(`
-        <style>
-        #entryCategory${category}{
-          background-image:url(${icon});
-          background-repeat:no-repeat;
-          background-size:20px;
-          background-position-y:8px;
-        }
-        </style>
-      `);
+    Entry.moduleManager?.loadBlocks({
+      categoryName: category,
+      blockSchemas: blocks.map(block => ({
+        blockName: block.name,
+        block: Object.assign(block, {
+          def: {
+            params: block.def,
+            type: block.name,
+          },
+        }),
+        isBlockShowBlockMenu: true,
+      })),
+    });
 
-      $(`#entryCategory${category}`).append(name);
-    }, 200);
+    Entry.playground?.blockMenu?.setMenu();
+
+    $('head').append(`
+      <style>
+      #entryCategory${category}{
+        background-image:url(${icon});
+        background-repeat:no-repeat;
+        background-size:20px;
+        background-position-y:8px;
+      }
+      </style>
+    `);
 
     console.log(`[KrisBlock] ${name} 로드 완료`);
   },
@@ -258,4 +279,4 @@ LibraryCreator.start(
   'https://raw.githubusercontent.com/pkselpl2/krisblocks/ef37224a6ad7032098f43d0350e0a5d4f2dea9fe/krislogo.svg.svg'
 );
 
-console.log('✅ 크리스블록 0.1 (작동 안됨) 적용 완료');
+console.log('✅ 크리스블록 0.2 적용 완료');
