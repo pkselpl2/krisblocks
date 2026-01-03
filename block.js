@@ -124,7 +124,7 @@ const krisBlocks = [
   /* (엔트리) 웹사이트 열기 */
   {
     name: 'kris_open_website',
-    template: '(엔트리) 웹사이트 %1 열기',
+    template: ' 웹사이트 %1 열기',
     skeleton: 'basic',
     color: KRIS_COLOR.default,
     outerLine: KRIS_COLOR.darken,
@@ -175,7 +175,7 @@ const krisBlocks = [
   /* 엔트리 alert */
   {
     name: 'kris_alert',
-    template: '(엔트리) %1 알림',
+    template: ' %1 알림',
     skeleton: 'basic',
     color: KRIS_COLOR.default,
     outerLine: KRIS_COLOR.darken,
