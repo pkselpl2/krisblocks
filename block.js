@@ -1,6 +1,5 @@
 /***********************
- * 크리스블록 0.2
- * 진짜 iframe 풀버전
+ * 크리스블록 0.3
  ***********************/
 
 /* 색상 */
@@ -47,7 +46,6 @@ const krisBlocks = [
       const iframe = getKrisIframe();
       iframe.src = script.getValue('URL', script);
       iframe.style.display = 'block';
-      return;
     },
   },
 
@@ -65,7 +63,6 @@ const krisBlocks = [
     func: () => {
       const iframe = document.getElementById('kris_iframe');
       if (iframe) iframe.style.display = 'none';
-      return;
     },
   },
 
@@ -81,9 +78,7 @@ const krisBlocks = [
     paramsKeyMap: { OP: 0 },
     class: 'text',
     func: (sprite, script) => {
-      getKrisIframe().style.opacity =
-        script.getValue('OP', script) / 100;
-      return;
+      getKrisIframe().style.opacity = script.getValue('OP', script)/100;
     },
   },
 
@@ -100,7 +95,6 @@ const krisBlocks = [
     class: 'text',
     func: () => {
       getKrisIframe().style.pointerEvents = 'none';
-      return;
     },
   },
 
@@ -117,14 +111,13 @@ const krisBlocks = [
     class: 'text',
     func: () => {
       getKrisIframe().style.pointerEvents = 'auto';
-      return;
     },
   },
 
-  /* (엔트리) 웹사이트 열기 */
+  /* 웹사이트 열기 */
   {
     name: 'kris_open_website',
-    template: ' 웹사이트 %1 열기',
+    template: '웹사이트 %1 열기',
     skeleton: 'basic',
     color: KRIS_COLOR.default,
     outerLine: KRIS_COLOR.darken,
@@ -134,7 +127,6 @@ const krisBlocks = [
     class: 'text',
     func: (sprite, script) => {
       window.open(script.getValue('URL', script), '_blank');
-      return;
     },
   },
 
@@ -150,8 +142,7 @@ const krisBlocks = [
     paramsKeyMap: {},
     class: 'text',
     func: () => {
-      if (Entry.engine) Entry.engine.toggleStop();
-      return;
+      if(Entry.engine) Entry.engine.toggleStop();
     },
   },
 
@@ -167,15 +158,14 @@ const krisBlocks = [
     paramsKeyMap: {},
     class: 'text',
     func: () => {
-      if (Entry.engine) Entry.engine.toggleRun();
-      return;
+      if(Entry.engine) Entry.engine.toggleRun();
     },
   },
 
   /* 엔트리 alert */
   {
     name: 'kris_alert',
-    template: ' %1 알림',
+    template: '%1 알림',
     skeleton: 'basic',
     color: KRIS_COLOR.default,
     outerLine: KRIS_COLOR.darken,
@@ -185,7 +175,6 @@ const krisBlocks = [
     class: 'text',
     func: (sprite, script) => {
       alert(script.getValue('MSG', script));
-      return;
     },
   },
 
@@ -205,6 +194,187 @@ const krisBlocks = [
     paramsKeyMap: {},
     class: 'text',
   },
+
+  /* === 비공식 블록 추가 === */
+
+  /* 1️⃣ 터보모드 체크 */
+  {
+    name: 'kris_turbo_check',
+    template: '터보모드가 켜져 있는가?',
+    skeleton: 'basic_boolean_field',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+    func: () => Entry.isTurbo === true,
+  },
+
+  /* 2️⃣ 터보모드 켜기/끄기 */
+  {
+    name: 'kris_turbo_set',
+    template: '부스트 모드 %1',
+    skeleton: 'basic',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [{
+      type: 'Dropdown',
+      options: [['켜기','true'], ['끄기','false']],
+    }],
+    def: [{ type:'dropdown', params:['true','true'] }],
+    paramsKeyMap: { MODE: 0 },
+    class: 'text',
+    func: (sprite, script) => {
+      Entry.isTurbo = script.getValue('MODE', script) === 'true';
+    },
+  },
+
+  /* 3️⃣ 오늘 요일 */
+  {
+    name: 'kris_today_day',
+    template: '오늘 요일',
+    skeleton: 'basic_string_field',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+    func: () => ['일','월','화','수','목','금','토'][new Date().getDay()],
+  },
+
+  /* 4️⃣ 페이지 새로고침 */
+  {
+    name: 'kris_reload',
+    template: '엔트리 페이지 새로고침하기',
+    skeleton: 'basic',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+    func: () => location.reload(),
+  },
+
+  /* 5️⃣ 모바일 환경 확인 */
+  {
+    name: 'kris_is_mobile',
+    template: '모바일 환경인가?',
+    skeleton: 'basic_boolean_field',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+    func: () => /Mobi|Android/i.test(navigator.userAgent),
+  },
+
+  /* 6️⃣ 엔트리 애셋 URL 가져오기 */
+  {
+    name: 'kris_get_asset_url',
+    template: '%1 엔트리 애셋 파일 가져오기',
+    skeleton: 'basic_string_field',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [{ type:'Block', accept:'string' }],
+    def: [{ type:'text', params:[''] }],
+    paramsKeyMap: { ID:0 },
+    class: 'text',
+    func: (sprite, script) => {
+      const id = script.getValue('ID', script);
+      const asset = Entry.storage?.asset?.getAsset(id);
+      return asset ? asset.fileurl : '';
+    },
+  },
+
+  /* 7️⃣ 애셋 존재 확인 */
+  {
+    name: 'kris_asset_exist',
+    template: '%1 애셋이 존재하는가?',
+    skeleton: 'basic_boolean_field',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [{ type:'Block', accept:'string' }],
+    def: [{ type:'text', params:[''] }],
+    paramsKeyMap: { ID:0 },
+    class: 'text',
+    func: (sprite, script) => !!Entry.storage?.asset?.getAsset(script.getValue('ID', script)),
+  },
+
+  /* 8️⃣ 전체화면 상태 확인 */
+  {
+    name: 'kris_is_fullscreen',
+    template: '전체화면 상태인가?',
+    skeleton: 'basic_boolean_field',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+    func: () => !!document.fullscreenElement,
+  },
+
+  /* 9️⃣ 전체화면 켜기/끄기 */
+  {
+    name: 'kris_fullscreen_set',
+    template: '전체화면 %1',
+    skeleton: 'basic',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [{
+      type:'Dropdown',
+      options:[['켜기','on'],['끄기','off']],
+    }],
+    def: [{ type:'dropdown', params:['켜기','켜기'] }],
+    paramsKeyMap: { MODE:0 },
+    class: 'text',
+    func: (sprite, script) => {
+      const mode = script.getValue('MODE', script);
+      if(mode==='on') document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    },
+  },
+
+  /* 🔟 애셋을 iframe에 바로 띄우기 */
+  {
+    name: 'kris_iframe_asset',
+    template: 'iframe에 애셋 %1 띄우기',
+    skeleton: 'basic',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [{ type:'Block', accept:'string' }],
+    def: [{ type:'text', params:[''] }],
+    paramsKeyMap: { ID:0 },
+    class: 'text',
+    func: (sprite, script) => {
+      const id = script.getValue('ID', script);
+      const asset = Entry.storage?.asset?.getAsset(id);
+      if(!asset) return;
+      const iframe = getKrisIframe();
+      iframe.src = asset.fileurl;
+      iframe.style.display='block';
+    },
+  },
+
+  /* 1️⃣1️⃣ 콘솔 로그 */
+  {
+    name: 'kris_console_log',
+    template: '콘솔에 %1 출력',
+    skeleton: 'basic',
+    color: KRIS_COLOR.default,
+    outerLine: KRIS_COLOR.darken,
+    params: [{ type:'Block', accept:'string' }],
+    def: [{ type:'text', params:['로그'] }],
+    paramsKeyMap: { MSG:0 },
+    class: 'text',
+    func: (sprite, script) => {
+      console.log('[KrisBlock]', script.getValue('MSG', script));
+    },
+  },
 ];
 
 /* LibraryCreator */
@@ -217,7 +387,6 @@ window.LibraryCreator = {
           observer.disconnect();
         }
       }).observe(document, { subtree: true, childList: true });
-
       return;
     }
 
@@ -226,17 +395,10 @@ window.LibraryCreator = {
 
     EntryStatic.getAllBlocks = (getAllBlocks => () => [
       ...getAllBlocks(),
-      {
-        category,
-        blocks: blocks.map(v => v.name),
-      },
+      { category, blocks: blocks.map(v => v.name) },
     ])(EntryStatic.getAllBlocks);
 
-    Entry.playground?.blockMenu?._categoryData.push({
-      category,
-      blocks: [],
-    });
-
+    Entry.playground?.blockMenu?._categoryData.push({ category, blocks: [] });
     Entry.playground?.blockMenu?._generateCategoryView(Entry.playground.blockMenu._categoryData);
     Entry.playground?.blockMenu?._generateCategoryCode(category);
 
@@ -244,12 +406,7 @@ window.LibraryCreator = {
       categoryName: category,
       blockSchemas: blocks.map(block => ({
         blockName: block.name,
-        block: Object.assign(block, {
-          def: {
-            params: block.def,
-            type: block.name,
-          },
-        }),
+        block: Object.assign(block, { def:{ params:block.def, type:block.name } }),
         isBlockShowBlockMenu: true,
       })),
     });
@@ -279,4 +436,4 @@ LibraryCreator.start(
   'https://raw.githubusercontent.com/pkselpl2/krisblocks/ef37224a6ad7032098f43d0350e0a5d4f2dea9fe/krislogo.svg.svg'
 );
 
-console.log('✅ 크리스블록 0.2 적용 완료');
+console.log('✅ 크리스블록 0.3 적용 완료');
