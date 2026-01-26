@@ -10,5 +10,6 @@ $.get('https://raw.githack.com/pkselpl2/krisblocks/main/block.js')
 ```
 
 ```
-<br>
 참고로 스페셜 블록을 아주 일부 참고했습니다
+``credits
+도움을 주신 분들: aqu3180(@idiotf)
