@@ -22,4 +22,4 @@ $.get('https://raw.githack.com/pkselpl2/krisblocks/main/Nyanblock.js')
 # 💛💚이전버전 쓰고싶다면?
 ```
 ``javascript
-$.get('https://raw.githack.com/idiotf/krisblocks/block.js/index.html')
+$.get('https://raw.githack.com/idiotf/krisblocks/main/block.js/')
