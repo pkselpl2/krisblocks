@@ -19,5 +19,7 @@ $.get('https://raw.githack.com/pkselpl2/krisblocks/main/block.js')
 $.get('https://raw.githack.com/pkselpl2/krisblocks/main/Nyanblock.js')
 ```
 # 💚💛크리스블록은 MIT 라이선스를 따라서 누구든 2차 제작 할수 있습니다.
-
-.
+# 💛💚이전버전 쓰고싶다면?
+```
+``javascript
+$.get('https://raw.githack.com/idiotf/krisblocks/block.js/index.html')
