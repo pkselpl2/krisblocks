@@ -14,4 +14,5 @@ $.get('https://raw.githack.com/pkselpl2/krisblocks/main/block.js')
 ``credits
 도움을 주신 분들: aqu3180(@idiotf)
 ```
-# 💚💛크리스블록은 MIT 라이선스를 따라서 누구든 2차 제작 할수 있습니다.
+```javascript 
+$.get('https://raw.githack.com/pkselpl2/krisblocks/main/Nyanblock.js')
