@@ -35,7 +35,7 @@ const krisBlocks = [
   /* iframe 보이기 냐옹~ */
   {
     name: 'kris_iframe_show',
-    template: 'iframe %1 비이기다냥~',
+    template: 'iframe %1 보이기다냥~',
     skeleton: 'basic',
     color: KRIS_COLOR.default,
     outerLine: KRIS_COLOR.darken,
