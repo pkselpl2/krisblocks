@@ -30,7 +30,37 @@ function getKrisIframe() {
 
 /* 블록 정의 */
 const krisBlocks = [
+{
+    name: 'kris_notice',
+    template: '%1',
+    color: EntryStatic.colorSet.common.TRANSPARENT,
+    skeleton: 'basic_text',
+    params: [{
+      type: 'Text',
+      text: '주의! 이 블록은 예기치 않은 동작이 발생할수 있습니다.',
+      color: EntryStatic.colorSet.common.TEXT,
+      align: 'center',
+    }],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+  },
 
+  {
+    name: 'kris_iframe목록',
+    template: '%1',
+    color: EntryStatic.colorSet.common.TRANSPARENT,
+    skeleton: 'basic_text',
+    params: [{
+      type: 'Text',
+      text: 'iframe 블록들',
+      color: EntryStatic.colorSet.common.TEXT,
+      align: 'center',
+    }],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+  },
   /* iframe 보이기 */
   {
     name: 'kris_iframe_show',
@@ -114,6 +144,21 @@ const krisBlocks = [
     },
   },
 
+  {
+    name: 'kris_control목록',
+    template: '%1',
+    color: EntryStatic.colorSet.common.TRANSPARENT,
+    skeleton: 'basic_text',
+    params: [{
+      type: 'Text',
+      text: ' 제어블록들 목록 ',
+      color: EntryStatic.colorSet.common.TEXT,
+      align: 'center',
+    }],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+  },
   /* 웹사이트 열기 */
   {
     name: 'kris_open_website',
@@ -195,6 +240,21 @@ const krisBlocks = [
     class: 'text',
   },
 
+  {
+    name: 'kris_최신',
+    template: '%1',
+    color: EntryStatic.colorSet.common.TRANSPARENT,
+    skeleton: 'basic_text',
+    params: [{
+      type: 'Text',
+      text: '최신블록 모음집',
+      color: EntryStatic.colorSet.common.TEXT,
+      align: 'center',
+    }],
+    def: [],
+    paramsKeyMap: {},
+    class: 'text',
+  },
   /* === 비공식 블록 추가 === */
 
   /* 1️⃣ 터보모드 체크 */
